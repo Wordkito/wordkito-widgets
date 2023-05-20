@@ -1,8 +1,9 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 
 export interface Props {
     deckId: string;
     shareToken: string;
+    iframeStyle: CSSProperties;
     appearance?: {
       accentColor?: string;
       backgroundColor?: string;

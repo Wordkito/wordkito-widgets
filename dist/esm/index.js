@@ -2481,5 +2481,23 @@ function WidgetTest(_a) {
         }, src: url }));
 }
 
-export { WidgetTest };
+var useWidgetTest = function () {
+    var _a = react.exports.useState(), result = _a[0], setResult = _a[1];
+    var onMessage = function (_a) {
+        var data = _a.data, origin = _a.origin;
+        var origins = ["https://test.wordkito.com", "https://wordkito.com"];
+        if (data.type === "result" && origins.includes(origin)) {
+            setResult(data.result);
+        }
+    };
+    react.exports.useEffect(function () {
+        window.addEventListener("message", onMessage);
+        return function () {
+            window.removeEventListener("message", onMessage);
+        };
+    }, []);
+    return { result: result };
+};
+
+export { WidgetTest, useWidgetTest };
 //# sourceMappingURL=index.js.map
