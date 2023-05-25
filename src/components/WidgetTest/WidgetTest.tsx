@@ -1,10 +1,10 @@
-import React, { CSSProperties, useEffect, useState } from "react";
+import React, { CSSProperties, useCallback, useEffect, useState } from "react";
 import { TestResult } from "shared-types-wordkito";
 
 export interface Props {
     deckId: string;
     shareToken?: string;
-    onFinished?:(result: TestResult) => void
+    onFinished?:({result}:{result:TestResult}) => void
     iframeStyle?: CSSProperties;
     appearance?: {
       accentColor?: string;
@@ -38,13 +38,18 @@ function WidgetTest({ deckId, shareToken, appearance, iframeStyle, onFinished}: 
   
     const url = `https://test.wordkito.com/decks/${deckId}/widgets/test?shareToken=${shareToken}${accentColorQueryParam}${backGroundColorQueryParam}${fontColorQueryParam}${backgroundElementColorQueryParam}${themeCodeModeQueryParam}`;
   
-    const onMessage = ({ data, origin }: any) => {
+    const onMessage = useCallback(
+      ({ data, origin }: any) => {
         const origins = ["https://test.wordkito.com", "https://wordkito.com"];
-
+  
         if (data.type === "result" && origins.includes(origin)) {
-          onFinished && onFinished(data.result);
+          if (onFinished) {
+            onFinished({ result: data.result });
+          }
         }
-    };
+      },
+      [onFinished]
+    );
 
     useEffect(() => {
         window.addEventListener("message", onMessage);
@@ -52,7 +57,7 @@ function WidgetTest({ deckId, shareToken, appearance, iframeStyle, onFinished}: 
         return () => {
         window.removeEventListener("message", onMessage);
         };
-    }, []);
+    }, [onMessage]);
 
     
     return (
