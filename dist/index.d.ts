@@ -4,7 +4,9 @@ import { TestResult } from 'shared-types-wordkito';
 interface Props {
     deckId: string;
     shareToken?: string;
-    onFinished?: (result: TestResult) => void;
+    onFinished?: ({ result }: {
+        result: TestResult;
+    }) => void;
     iframeStyle?: CSSProperties;
     appearance?: {
         accentColor?: string;

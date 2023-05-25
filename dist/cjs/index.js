@@ -2504,19 +2504,21 @@ function WidgetTest(_a) {
         ? "&themeCodeMode=".concat(appearance.themeCodeMode)
         : "";
     var url = "https://test.wordkito.com/decks/".concat(deckId, "/widgets/test?shareToken=").concat(shareToken).concat(accentColorQueryParam).concat(backGroundColorQueryParam).concat(fontColorQueryParam).concat(backgroundElementColorQueryParam).concat(themeCodeModeQueryParam);
-    var onMessage = function (_a) {
+    var onMessage = react.exports.useCallback(function (_a) {
         var data = _a.data, origin = _a.origin;
         var origins = ["https://test.wordkito.com", "https://wordkito.com"];
         if (data.type === "result" && origins.includes(origin)) {
-            onFinished && onFinished(data.result);
+            if (onFinished) {
+                onFinished({ result: data.result });
+            }
         }
-    };
+    }, [onFinished]);
     react.exports.useEffect(function () {
         window.addEventListener("message", onMessage);
         return function () {
             window.removeEventListener("message", onMessage);
         };
-    }, []);
+    }, [onMessage]);
     return (React.createElement("iframe", { title: "wordkito-widget-test", style: __assign({ border: "none", width: "100%", height: "500px" }, iframeStyle), src: url }));
 }
 

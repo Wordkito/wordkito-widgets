@@ -1,4 +1,4 @@
-import React, { CSSProperties, useCallback, useEffect, useState } from "react";
+import React, { CSSProperties, useCallback, useEffect } from "react";
 import { TestResult } from "shared-types-wordkito";
 
 export interface Props {
