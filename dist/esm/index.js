@@ -1,3 +1,29 @@
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
 var react = {exports: {}};
 
 var react_production_min = {};
@@ -2457,7 +2483,7 @@ if (process.env.NODE_ENV === 'production') {
 var React = react.exports;
 
 function WidgetTest(_a) {
-    var deckId = _a.deckId, shareToken = _a.shareToken, appearance = _a.appearance;
+    var deckId = _a.deckId, shareToken = _a.shareToken, appearance = _a.appearance, iframeStyle = _a.iframeStyle, onFinished = _a.onFinished;
     var accentColorQueryParam = (appearance === null || appearance === void 0 ? void 0 : appearance.accentColor)
         ? "&accentColor=".concat(appearance.accentColor)
         : "";
@@ -2474,20 +2500,11 @@ function WidgetTest(_a) {
         ? "&themeCodeMode=".concat(appearance.themeCodeMode)
         : "";
     var url = "https://test.wordkito.com/decks/".concat(deckId, "/widgets/test?shareToken=").concat(shareToken).concat(accentColorQueryParam).concat(backGroundColorQueryParam).concat(fontColorQueryParam).concat(backgroundElementColorQueryParam).concat(themeCodeModeQueryParam);
-    return (React.createElement("iframe", { title: "wordkito-widget-test", style: {
-            border: "none",
-            width: "100%",
-            height: "500px"
-        }, src: url }));
-}
-
-var useWidgetTest = function () {
-    var _a = react.exports.useState(), result = _a[0], setResult = _a[1];
     var onMessage = function (_a) {
         var data = _a.data, origin = _a.origin;
         var origins = ["https://test.wordkito.com", "https://wordkito.com"];
         if (data.type === "result" && origins.includes(origin)) {
-            setResult(data.result);
+            onFinished && onFinished(data.result);
         }
     };
     react.exports.useEffect(function () {
@@ -2496,8 +2513,8 @@ var useWidgetTest = function () {
             window.removeEventListener("message", onMessage);
         };
     }, []);
-    return { result: result };
-};
+    return (React.createElement("iframe", { title: "wordkito-widget-test", style: __assign({ border: "none", width: "100%", height: "500px" }, iframeStyle), src: url }));
+}
 
-export { WidgetTest, useWidgetTest };
+export { WidgetTest };
 //# sourceMappingURL=index.js.map

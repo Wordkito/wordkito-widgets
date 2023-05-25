@@ -1,8 +1,10 @@
 import React, { CSSProperties } from "react";
+import { TestResult } from "shared-types-wordkito";
 export interface Props {
     deckId: string;
-    shareToken: string;
-    iframeStyle: CSSProperties;
+    shareToken?: string;
+    onFinished?: (result: TestResult) => void;
+    iframeStyle?: CSSProperties;
     appearance?: {
         accentColor?: string;
         backgroundColor?: string;
@@ -11,5 +13,5 @@ export interface Props {
         themeCodeMode?: string;
     };
 }
-declare function WidgetTest({ deckId, shareToken, appearance }: Props): React.JSX.Element;
+declare function WidgetTest({ deckId, shareToken, appearance, iframeStyle, onFinished }: Props): React.JSX.Element;
 export default WidgetTest;

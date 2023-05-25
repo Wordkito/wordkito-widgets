@@ -23,5 +23,8 @@
   "files": [
     "dist"
   ],
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "shared-types-wordkito": "^1.5.42"
+  }
 }
