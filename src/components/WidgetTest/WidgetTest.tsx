@@ -3,59 +3,66 @@ import { TestResult } from "shared-types-wordkito";
 
 export interface Props {
     deckId: string;
-    shareToken?: string;
-    onFinished?:({result}:{result:TestResult}) => void
+    delayTime?: number;
+    onFinished?:({ result }: {result:TestResult}) => void
     iframeStyle?: CSSProperties;
     appearance?: {
-      accentColor?: string;
       backgroundColor?: string;
-      fontColor?: string;
-      backgroundElementColor?: string;
-      themeCodeMode?: string;
+      accentColor?: string;
+      accentContrastColor?: string;
+      backgroundContrastColor?: string;
+      backgroundContrastColorHover?: string;
+      themeCodeMode?: "dark" | "light";
     };
   }
   
-function WidgetTest({ deckId, shareToken, appearance, iframeStyle, onFinished}: Props) {
-    const accentColorQueryParam = appearance?.accentColor
-      ? `&accentColor=${appearance.accentColor}`
-      : "";
+const  WidgetTest = ({ deckId, delayTime, appearance, iframeStyle, onFinished}: Props) =>{
+  const url = new URL(`https://test.wordkito.com/decks/${deckId}/widgets/test`);
+  if (appearance?.accentColor) {
+    url.searchParams.append("accentColor", appearance.accentColor);
+  }
+
+  if (appearance?.accentContrastColor) {
+    url.searchParams.append(
+      "accentContrastColor",
+      appearance.accentContrastColor
+    );
+  }
+  if (appearance?.backgroundColor) {
+    url.searchParams.append("backgroundColor", appearance.backgroundColor);
+  }
+
+  if (appearance?.backgroundContrastColor) {
+    url.searchParams.append(
+      "backgroundContrastColor",
+      appearance.backgroundContrastColor
+    );
+  }
+
+  if (delayTime) {
+    url.searchParams.append("delayTime", delayTime.toString());
+  }
+
+  if (appearance?.themeCodeMode) {
+    url.searchParams.append("themeCodeMode", appearance.themeCodeMode);
+  }
+
+  const fullUrl = url.origin + url.pathname + url.search;
   
-    const backGroundColorQueryParam = appearance?.backgroundColor
-      ? `&backgroundColor=${appearance.backgroundColor}`
-      : "";
-  
-    const fontColorQueryParam = appearance?.fontColor
-      ? `&fontColor=${appearance.fontColor}`
-      : "";
-  
-    const backgroundElementColorQueryParam = appearance?.backgroundElementColor
-      ? `&backgroundElementColor=${appearance.backgroundElementColor}`
-      : "";
-  
-    const themeCodeModeQueryParam = appearance?.themeCodeMode
-      ? `&themeCodeMode=${appearance.themeCodeMode}`
-      : "";
-  
-    const url = `https://test.wordkito.com/decks/${deckId}/widgets/test?shareToken=${shareToken}${accentColorQueryParam}${backGroundColorQueryParam}${fontColorQueryParam}${backgroundElementColorQueryParam}${themeCodeModeQueryParam}`;
-  
-    const onMessage = useCallback(
-      ({ data, origin }: any) => {
+    const onMessage = useCallback(({ data, origin }: any) => {
         const origins = ["https://test.wordkito.com", "https://wordkito.com"];
   
-        if (data.type === "result" && origins.includes(origin)) {
-          if (onFinished) {
-            onFinished({ result: data.result });
-          }
+        if (data.type === "result" && origins.includes(origin) && onFinished) {
+          onFinished({ result: data.result });
+
         }
-      },
-      [onFinished]
-    );
+      },[onFinished]);
 
     useEffect(() => {
         window.addEventListener("message", onMessage);
 
         return () => {
-        window.removeEventListener("message", onMessage);
+          window.removeEventListener("message", onMessage);
         };
     }, [onMessage]);
 
@@ -69,7 +76,7 @@ function WidgetTest({ deckId, shareToken, appearance, iframeStyle, onFinished}: 
           height: "500px",
           ...iframeStyle
         }}
-        src={url}
+        src={fullUrl}
       ></iframe>
     );
   }

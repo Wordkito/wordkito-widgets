@@ -3,19 +3,20 @@ import { TestResult } from 'shared-types-wordkito';
 
 interface Props {
     deckId: string;
-    shareToken?: string;
+    delayTime?: number;
     onFinished?: ({ result }: {
         result: TestResult;
     }) => void;
     iframeStyle?: CSSProperties;
     appearance?: {
-        accentColor?: string;
         backgroundColor?: string;
-        fontColor?: string;
-        backgroundElementColor?: string;
-        themeCodeMode?: string;
+        accentColor?: string;
+        accentContrastColor?: string;
+        backgroundContrastColor?: string;
+        backgroundContrastColorHover?: string;
+        themeCodeMode?: "dark" | "light";
     };
 }
-declare function WidgetTest({ deckId, shareToken, appearance, iframeStyle, onFinished }: Props): React.JSX.Element;
+declare const WidgetTest: ({ deckId, delayTime, appearance, iframeStyle, onFinished }: Props) => React.JSX.Element;
 
 export { WidgetTest };
